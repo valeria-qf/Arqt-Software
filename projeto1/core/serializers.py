@@ -1,8 +1,12 @@
 from rest_framework import serializers
-from .models import Exemplo
+from .models import Aluno, Nota
 
-class ExemploSerializer(serializers.ModelSerializer):
+class NotasSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Exemplo
-        fields = '__all__'
+        model = Nota
+        fields = ['id', 'aluno', 'valor']
 
+class AlunoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Aluno
+        fields = ['id', 'nome']
