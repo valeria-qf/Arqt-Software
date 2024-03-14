@@ -1,17 +1,14 @@
-import { Typography } from "@mui/material"
 import BasicTable from "./components/table"
 
 function App() {
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        testando
-      </Typography>
-        <BasicTable />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+      <BasicTable />
+    </div>
 
     </>
-    
   )
 }
 

@@ -2,7 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -16,10 +17,21 @@ const style = {
   borderRadius: 4,
 };
 
-export default function BasicModal({ open, setOpen, onClose }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>, onClose: () => void }) {
+export default function BasicModalEdit({ open, setOpen, onClose }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>, onClose: () => void }) {
+  const [firstBim, setFirstBim] = React.useState('');
+  const [secondBim, setSecondBim] = React.useState('');
+  const [thirdBim, setThirdBim] = React.useState('');
+  const [fourthBim, setFourthBim] = React.useState('');
+
   const handleClose = () => {
     setOpen(false);
     onClose();
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    handleClose(); 
   };
 
   return (
@@ -31,11 +43,47 @@ export default function BasicModal({ open, setOpen, onClose }: { open: boolean, 
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
+          Editar Notas
         </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula. DFDFGKFLK,RG
-        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="1º Bimestre"
+            type="float"
+            value={firstBim}
+            onChange={(e) => setFirstBim(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="2º Bimestre"
+            type="float"
+            value={secondBim}
+            onChange={(e) => setSecondBim(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="3º Bimestre"
+            type="float"
+            value={thirdBim}
+            onChange={(e) => setThirdBim(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="4º Bimestre"
+            type="float"
+            value={fourthBim}
+            onChange={(e) => setFourthBim(e.target.value)}
+            fullWidth
+            margin="normal"
+          />
+          <Box sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary">
+              Salvar
+            </Button>
+          </Box>
+        </form>
       </Box>
     </Modal>
   );

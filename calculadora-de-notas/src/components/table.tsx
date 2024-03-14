@@ -11,15 +11,16 @@ import EditNoteOutlinedIcon from "@mui/icons-material/EditNoteOutlined";
 import IconButton from "@mui/material/IconButton";
 import BasicModal from "./BasicModal";
 import BasicModalEdit from "./BasicModalEdit";
+import SearchBar from "./Search";
 
 function createData(
   name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number
+  nota1: number,
+  nota2: number,
+  nota3: number,
+  nota4: number
 ) {
-  return { name, calories, fat, carbs, protein };
+  return { name, nota1, nota2, nota3, nota4 };
 }
 
 const rows = [
@@ -32,7 +33,8 @@ const rows = [
 
 export default function BasicTable() {
   const [open, setOpen] = React.useState(false);
-  const [modalType, setModalType] = React.useState(""); // State to determine which modal to open
+  const [modalType, setModalType] = React.useState("");
+  const [filteredRows, setFilteredRows] = React.useState(rows);
 
   const handleOpenModal = (type: "add" | "edit") => {
     setOpen(true);
@@ -42,6 +44,7 @@ export default function BasicTable() {
 
   return (
     <>
+      <SearchBar items={rows} setFilteredItems={setFilteredRows} />
       <TableContainer component={Paper} sx={{ width: 900 }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -56,7 +59,7 @@ export default function BasicTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {filteredRows.map((row) => (
               <TableRow
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -64,11 +67,11 @@ export default function BasicTable() {
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell align="center">{row.calories}</TableCell>
-                <TableCell align="center">{row.fat}</TableCell>
-                <TableCell align="center">{row.carbs}</TableCell>
-                <TableCell align="center">{row.protein}</TableCell>
-                <TableCell align="center">{row.protein}</TableCell>
+                <TableCell align="center">{row.nota1}</TableCell>
+                <TableCell align="center">{row.nota2}</TableCell>
+                <TableCell align="center">{row.nota3}</TableCell>
+                <TableCell align="center">{row.nota4}</TableCell>
+                <TableCell align="center">{(row.nota1 + row.nota2 + row.nota3 + row.nota4) / 4}</TableCell>
                 <TableCell
                   align="center"
                   sx={{ display: "flex", justifyContent: "center" }}
@@ -94,7 +97,6 @@ export default function BasicTable() {
       {modalType === "edit" && (
         <BasicModalEdit open={open} setOpen={setOpen} onClose={handleCloseModal} />
       )}
-
     </>
   );
 }

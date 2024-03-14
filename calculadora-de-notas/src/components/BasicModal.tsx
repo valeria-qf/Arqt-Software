@@ -2,7 +2,8 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -22,6 +23,12 @@ export default function BasicModal({ open, setOpen, onClose }: { open: boolean, 
     onClose();
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    handleClose();
+  };
+
   return (
     <Modal
       open={open}
@@ -31,11 +38,39 @@ export default function BasicModal({ open, setOpen, onClose }: { open: boolean, 
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
+          Adicionar Notas
         </Typography>
-        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="1º Bimestre"
+            type="float"
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="2º Bimestre"
+            type="float"
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="3º Bimestre"
+            type="float"
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="4º Bimestre"
+            type="float"
+            fullWidth
+            margin="normal"
+          />
+          <Box sx={{ mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary">
+              Salvar
+            </Button>
+          </Box>
+        </form>
       </Box>
     </Modal>
   );
