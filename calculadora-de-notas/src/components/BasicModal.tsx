@@ -43,27 +43,31 @@ export default function BasicModal({ open, setOpen, onClose }: { open: boolean, 
         <form onSubmit={handleSubmit}>
           <TextField
             label="1º Bimestre"
-            type="float"
+            type="number"
             fullWidth
             margin="normal"
+            inputProps={{ min: 0, max: 100, step: 0.01 }}
           />
           <TextField
             label="2º Bimestre"
-            type="float"
+            type="number"
             fullWidth
             margin="normal"
+            inputProps={{ min: 0, max: 100, step: 0.01 }}
           />
           <TextField
             label="3º Bimestre"
-            type="float"
+            type="number"
             fullWidth
             margin="normal"
+            inputProps={{ min: 0, max: 100, step: 0.01 }}
           />
           <TextField
             label="4º Bimestre"
-            type="float"
+            type="number"
             fullWidth
             margin="normal"
+            inputProps={{ min: 0, max: 100, step: 0.01 }}
           />
           <Box sx={{ mt: 2 }}>
             <Button type="submit" variant="contained" color="primary">

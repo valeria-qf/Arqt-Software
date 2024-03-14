@@ -17,17 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from core.views import AlunoViewSet, NotaViewSet
+from core.views import AlunoViewSet, NotaViewSet, DisciplinaViewSet
 
 router = DefaultRouter()
 router.register(r'alunos', AlunoViewSet)
 router.register(r'notas', NotaViewSet)
+router.register(r'disciplinas', DisciplinaViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
 ]
-
-urlpatterns += [
-    path('alunos/<int:pk>/calcular-media/', AlunoViewSet.as_view({'get': 'calcular_media'}), name='calcular-media'),
-] 

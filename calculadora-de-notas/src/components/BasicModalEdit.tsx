@@ -18,10 +18,10 @@ const style = {
 };
 
 export default function BasicModalEdit({ open, setOpen, onClose }: { open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>, onClose: () => void }) {
-  const [firstBim, setFirstBim] = React.useState('');
-  const [secondBim, setSecondBim] = React.useState('');
-  const [thirdBim, setThirdBim] = React.useState('');
-  const [fourthBim, setFourthBim] = React.useState('');
+  const [firstBim, setFirstBim] = React.useState<number | ''>('');
+  const [secondBim, setSecondBim] = React.useState<number | ''>('');
+  const [thirdBim, setThirdBim] = React.useState<number | ''>('');
+  const [fourthBim, setFourthBim] = React.useState<number | ''>('');
 
   const handleClose = () => {
     setOpen(false);
@@ -30,9 +30,10 @@ export default function BasicModalEdit({ open, setOpen, onClose }: { open: boole
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+      
     handleClose(); 
   };
+ 
 
   return (
     <Modal
@@ -48,35 +49,39 @@ export default function BasicModalEdit({ open, setOpen, onClose }: { open: boole
         <form onSubmit={handleSubmit}>
           <TextField
             label="1º Bimestre"
-            type="float"
+            type="number"
             value={firstBim}
-            onChange={(e) => setFirstBim(e.target.value)}
+            onChange={(e) => setFirstBim(parseFloat(e.target.value))}
             fullWidth
             margin="normal"
+            InputProps={{ inputProps: { min: 0, max: 100, step: 0.01 } }}
           />
           <TextField
             label="2º Bimestre"
-            type="float"
+            type="number"
             value={secondBim}
-            onChange={(e) => setSecondBim(e.target.value)}
+            onChange={(e) => setSecondBim(parseFloat(e.target.value))}
             fullWidth
             margin="normal"
+            InputProps={{ inputProps: { min: 0, max: 100, step: 0.01 } }}
           />
           <TextField
             label="3º Bimestre"
-            type="float"
+            type="number"
             value={thirdBim}
-            onChange={(e) => setThirdBim(e.target.value)}
+            onChange={(e) => setThirdBim(parseFloat(e.target.value))}
             fullWidth
             margin="normal"
+            InputProps={{ inputProps: { min: 0, max: 100, step: 0.01 } }}
           />
           <TextField
             label="4º Bimestre"
-            type="float"
+            type="number"
             value={fourthBim}
-            onChange={(e) => setFourthBim(e.target.value)}
+            onChange={(e) => setFourthBim(parseFloat(e.target.value))}
             fullWidth
             margin="normal"
+            InputProps={{ inputProps: { min: 0, max: 100, step: 0.01 } }}
           />
           <Box sx={{ mt: 2 }}>
             <Button type="submit" variant="contained" color="primary">
