@@ -65,34 +65,43 @@ const BasicModal: React.FC<BasicModalProps> = ({ open, onClose, alunoId, onSave}
         <TextField
           fullWidth
           label="Nota 1"
+          type= "number"
           name="nota1"
           value={editedNotas.nota1}
           onChange={handleInputChange}
           margin="normal"
+          inputProps={{ min: 0, max: 100, step: 0.01}}
         />
         <TextField
           fullWidth
           label="Nota 2"
+          type= "number"
           name="nota2"
           value={editedNotas.nota2}
           onChange={handleInputChange}
           margin="normal"
+          inputProps={{ min: 0, max: 100, step: 0.01}}
         />
         <TextField
           fullWidth
           label="Nota 3"
+          type= "number"
           name="nota3"
           value={editedNotas.nota3}
           onChange={handleInputChange}
           margin="normal"
+          inputProps={{ min: 0, max: 100, step: 0.01}}
+          
         />
         <TextField
           fullWidth
           label="Nota 4"
           name="nota4"
+          type= "number"
           value={editedNotas.nota4}
           onChange={handleInputChange}
           margin="normal"
+          inputProps={{ min: 0, max: 100, step: 0.01}}
         />
         <Button variant="contained" onClick={handleSave} sx={{ mt: 2 }}>
           Salvar
