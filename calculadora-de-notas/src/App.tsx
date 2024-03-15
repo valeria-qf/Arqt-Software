@@ -1,4 +1,5 @@
 import BasicTable from "./components/table"
+// import Search from './components/Search'
 
 function App() {
 

@@ -1,42 +1,35 @@
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search';
+import * as React from "react";
+import TextField from "@mui/material/TextField";
 
-interface SearchBarProps {
-    items: { name: string; nota1: number; nota2: number; nota3: number; nota4: number; }[];
-    setFilteredItems: React.Dispatch<React.SetStateAction<{ name: string; nota1: number; nota2: number; nota3: number; nota4: number; }[]>>;
+interface SearchProps {
+  onSearch: (searchTerm: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ items, setFilteredItems }) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-
-  const handleSearch = () => {
-    const filteredItems = items.filter(item =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredItems(filteredItems);
-  };
+const Search: React.FC<SearchProps> = ({ onSearch }) => {
+  const [searchTerm, setSearchTerm] = React.useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    onSearch(searchTerm);
+  };
+
   return (
-    <div style={{ display: 'flex', width: 900}}>
+    <form onSubmit={handleSubmit}>
       <TextField
-        label="Pesquisar"
-        variant="outlined"
-        size="small"
         fullWidth
+        label="Buscar Aluno"
+        variant="outlined"
         value={searchTerm}
         onChange={handleChange}
+        margin="normal"
+        sx={{ width: 900 }} 
       />
-      <IconButton onClick={handleSearch} aria-label="search">
-        <SearchIcon />
-      </IconButton>
-    </div>
+    </form>
   );
-}
+};
 
-export default SearchBar;
+export default Search;
