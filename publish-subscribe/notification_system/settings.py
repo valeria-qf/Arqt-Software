@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,8 +39,19 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'rest_framework'
+    'rest_framework',
 ]
+
+# Asynchronous Server Gateway Interface,
+ASGI_APPLICATION = 'notification_system.asgi.application'
+
+# configuração  do django channels que define a camada de comunicação que será usada para gerenciar os canais e grupos de canais
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,6 +64,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'notification_system.urls'
+
 
 TEMPLATES = [
     {
