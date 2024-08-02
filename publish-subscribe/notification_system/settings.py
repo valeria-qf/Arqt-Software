@@ -43,7 +43,9 @@ INSTALLED_APPS = [
 ]
 
 # Asynchronous Server Gateway Interface,
+
 ASGI_APPLICATION = 'notification_system.asgi.application'
+
 
 # configuração  do django channels que define a camada de comunicação que será usada para gerenciar os canais e grupos de canais
 CHANNEL_LAYERS = {

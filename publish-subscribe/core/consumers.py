@@ -1,4 +1,3 @@
-# core/consumers.py
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 import json
@@ -20,10 +19,17 @@ class NotificationConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         data = json.loads(text_data)
-        if data.get('type') == 'subscribe':
-            self.subscribe_to_topic(data.get('topic'))
-        elif data.get('type') == 'notification':
-            self.send_notification(data.get('topic'), data.get('message'))
+        action_type = data.get('type')
+
+        if action_type == 'subscribe':
+            topic_name = data.get('topic')
+            if topic_name:
+                self.subscribe_to_topic(topic_name)
+        elif action_type == 'notification':
+            topic_name = data.get('topic')
+            message = data.get('message')
+            if topic_name and message:
+                self.send_notification(topic_name, message)
 
     def subscribe_to_topic(self, topic_name):
         self.topic = f"notifications_{topic_name}"
