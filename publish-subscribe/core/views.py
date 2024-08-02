@@ -52,7 +52,6 @@ class NotificationViewSet(viewsets.ModelViewSet):
                     'message': message
                 }
             )
-
             return Response({'status': 'notification sent'})
         except NotificationTopic.DoesNotExist:
             return Response({'status': 'topic does not exist'}, status=400)
