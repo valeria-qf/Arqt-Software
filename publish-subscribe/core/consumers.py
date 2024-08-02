@@ -1,54 +1,48 @@
-# core/consumers.py
-from channels.generic.websocket import WebsocketConsumer
-from asgiref.sync import async_to_sync
 import json
+from channels.generic.websocket import AsyncWebsocketConsumer
+from django.contrib.auth.models import User
+from .models import UserSubscription
 
-class NotificationConsumer(WebsocketConsumer):
-    def connect(self):
-        self.topic = self.scope['url_route']['kwargs'].get('topic', 'default_topic')
-        self.channel_layer.group_add(
-            self.topic,
+class NotificationConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        self.user = self.scope["user"]
+        if not self.user.is_authenticated:
+            await self.close()
+            return
+
+        self.topic_name = self.scope['url_route']['kwargs'].get('topic_name')
+        self.room_group_name = f'notifications_{self.topic_name}'
+
+        if not UserSubscription.objects.filter(user=self.user, topic__name=self.topic_name).exists():
+            topic = await self.get_topic()
+            UserSubscription.objects.create(user=self.user, topic=topic)
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
             self.channel_name
         )
-        self.accept()
 
-    def disconnect(self, close_code):
-        self.channel_layer.group_discard(
-            self.topic,
+        await self.accept()
+
+    async def disconnect(self, close_code):
+        # Leave room group
+        await self.channel_layer.group_discard(
+            self.room_group_name,
             self.channel_name
         )
 
-    def receive(self, text_data):
-        data = json.loads(text_data)
-        if data.get('type') == 'subscribe':
-            self.subscribe_to_topic(data.get('topic'))
-        elif data.get('type') == 'notification':
-            self.send_notification(data.get('topic'), data.get('message'))
+    async def receive(self, text_data):
+        # This method can be used if you want to handle incoming WebSocket messages
+        pass
 
-    def subscribe_to_topic(self, topic_name):
-        self.topic = f"notifications_{topic_name}"
-        self.channel_layer.group_add(
-            self.topic,
-            self.channel_name
-        )
-        self.send(text_data=json.dumps({
-            'type': 'subscription_success',
-            'message': f'Subscribed to {topic_name}'
-        }))
-
-    def send_notification(self, topic_name, message):
-        self.topic = f"notifications_{topic_name}"
-        async_to_sync(self.channel_layer.group_send)(
-            self.topic,
-            {
-                'type': 'notification_message',
-                'message': message
-            }
-        )
-
-    def notification_message(self, event):
+    async def send_notification(self, event):
         message = event['message']
-        self.send(text_data=json.dumps({
-            'type': 'notification',
+
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps({
             'message': message
         }))
+
+    async def get_topic(self):
+        from .models import Topic
+        return await Topic.objects.get(name=self.topic_name)

@@ -1,11 +1,8 @@
 from django.contrib import admin
-from .models import User, NotificationTopic, UserSubscription, Notification
+from .models import Topic, UserSubscription, Notification
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ['email']
 
-@admin.register(NotificationTopic)
+@admin.register(Topic)
 class NotificationTopicAdmin(admin.ModelAdmin):
     list_display = ('name',)
 

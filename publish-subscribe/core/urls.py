@@ -1,12 +1,12 @@
-from django.urls import path, include
-from rest_framework import routers
-from core.views import NotificationViewSet, UserSubscriptionViewSet, home
+# core/urls.py
 
-router = routers.DefaultRouter()
-router.register(r'user-subscriptions', UserSubscriptionViewSet)
-router.register(r'notifications', NotificationViewSet)
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import UserSubscriptionViewSet
+
+router = DefaultRouter()
+router.register(r'subscriptions', UserSubscriptionViewSet, basename='user-subscription')
 
 urlpatterns = [
-    path('api/', include(router.urls)),
-    path('', home)
+    path('', include(router.urls)),
 ]
