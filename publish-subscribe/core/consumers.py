@@ -1,3 +1,5 @@
+from channels.generic.websocket import WebsocketConsumer
+from asgiref.sync import async_to_sync
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth.models import User
@@ -22,12 +24,24 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        await self.accept()
+    def receive(self, text_data):
+        data = json.loads(text_data)
+        action_type = data.get('type')
 
-    async def disconnect(self, close_code):
-        # Leave room group
-        await self.channel_layer.group_discard(
-            self.room_group_name,
+        if action_type == 'subscribe':
+            topic_name = data.get('topic')
+            if topic_name:
+                self.subscribe_to_topic(topic_name)
+        elif action_type == 'notification':
+            topic_name = data.get('topic')
+            message = data.get('message')
+            if topic_name and message:
+                self.send_notification(topic_name, message)
+
+    def subscribe_to_topic(self, topic_name):
+        self.topic = f"notifications_{topic_name}"
+        self.channel_layer.group_add(
+            self.topic,
             self.channel_name
         )
 

@@ -1,12 +1,11 @@
 # core/urls.py
 
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import UserSubscriptionViewSet
+from rest_framework import routers
 
-router = DefaultRouter()
-router.register(r'subscriptions', UserSubscriptionViewSet, basename='user-subscription')
+
+router = routers.DefaultRouter()
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
 ]
