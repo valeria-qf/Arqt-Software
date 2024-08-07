@@ -10,4 +10,4 @@ class UserSubscriptionSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['id', 'topic', 'message', 'created_at']
+        fields = ['id', 'topic','title', 'message', 'created_at']
