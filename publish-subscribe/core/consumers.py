@@ -18,9 +18,10 @@ class NotificationConsumer(WebsocketConsumer):
         self.user = user
 
         # Resubscreve o usuário nos tópicos existentes
+        self.accept()
+        
         self.resubscribe_to_topics()
 
-        self.accept()
 
         self.send(text_data=json.dumps({
             'type': 'connection',
