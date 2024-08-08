@@ -34,7 +34,9 @@ class LoginView(APIView):
 class NotificationViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
+    permission_classes = [AllowAny]
 
+    @csrf_exempt
     @action(detail=False, methods=['post'])
     def send(self, request):
         topic_name = request.data.get('topic')
