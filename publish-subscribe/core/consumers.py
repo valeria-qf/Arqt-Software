@@ -23,6 +23,12 @@ class NotificationConsumer(WebsocketConsumer):
 
         self.accept()
 
+        self.send(text_data=json.dumps({
+        'type': 'connection',
+        'message': 'Connected successfully',
+        'user': self.user.username
+    }))
+
     def disconnect(self, close_code):
         if self.topic_group_name:
             async_to_sync(self.channel_layer.group_discard)(
