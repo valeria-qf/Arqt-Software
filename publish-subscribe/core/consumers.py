@@ -8,7 +8,6 @@ from urllib.parse import parse_qs
 
 class NotificationConsumer(WebsocketConsumer):
     def connect(self):
-        # Extrair o token da query string
         token = self.get_token_from_query(self.scope['query_string'].decode())
         user = self.authenticate_token(token)
         
@@ -18,23 +17,20 @@ class NotificationConsumer(WebsocketConsumer):
 
         self.user = user
 
-        # Inicializa o grupo de tópicos (não definido ainda)
-        self.topic_group_name = None
+        # Resubscreve o usuário nos tópicos existentes
+        self.resubscribe_to_topics()
 
         self.accept()
 
         self.send(text_data=json.dumps({
-        'type': 'connection',
-        'message': 'Connected successfully',
-        'user': self.user.username
-    }))
+            'type': 'connection',
+            'message': 'Connected successfully',
+            'user': self.user.username
+        }))
 
     def disconnect(self, close_code):
-        if self.topic_group_name:
-            async_to_sync(self.channel_layer.group_discard)(
-                self.topic_group_name,
-                self.channel_name
-            )
+        # Lógica de desconexão pode ser removida ou adaptada conforme necessário
+        pass
 
     def receive(self, text_data):
         if not self.user.is_authenticated:
@@ -49,17 +45,17 @@ class NotificationConsumer(WebsocketConsumer):
         topic_name = data.get('topic')
 
         if message_type == 'subscribe' and topic_name:
-            self.subscribe_to_topic(self.user, topic_name)
+            self.subscribe_to_topic(topic_name)
         elif message_type == 'unsubscribe' and topic_name:
-            self.unsubscribe_from_topic(self.user, topic_name)
+            self.unsubscribe_from_topic(topic_name)
         else:
             self.send(text_data=json.dumps({
                 'type': 'error',
                 'message': 'Invalid message or missing topic'
             }))
 
-    def subscribe_to_topic(self, user, topic_name):
-        self.topic_group_name = f"notifications_{topic_name}"
+    def subscribe_to_topic(self, topic_name):
+        topic_group_name = f"notifications_{topic_name}"
         
         try:
             topic = NotificationTopic.objects.get(name=topic_name)
@@ -71,9 +67,9 @@ class NotificationConsumer(WebsocketConsumer):
             return
 
         # Save subscription to database
-        UserSubscription.objects.get_or_create(user=user, topic=topic)
+        UserSubscription.objects.get_or_create(user=self.user, topic=topic)
         async_to_sync(self.channel_layer.group_add)(
-            self.topic_group_name,
+            topic_group_name,
             self.channel_name
         )
         self.send(text_data=json.dumps({
@@ -81,8 +77,8 @@ class NotificationConsumer(WebsocketConsumer):
             'message': f'Subscribed to {topic_name}'
         }))
 
-    def unsubscribe_from_topic(self, user, topic_name):
-        self.topic_group_name = f"notifications_{topic_name}"
+    def unsubscribe_from_topic(self, topic_name):
+        topic_group_name = f"notifications_{topic_name}"
         
         try:
             topic = NotificationTopic.objects.get(name=topic_name)
@@ -94,9 +90,9 @@ class NotificationConsumer(WebsocketConsumer):
             return
 
         # Remove subscription from database
-        UserSubscription.objects.filter(user=user, topic=topic).delete()
+        UserSubscription.objects.filter(user=self.user, topic=topic).delete()
         async_to_sync(self.channel_layer.group_discard)(
-            self.topic_group_name,
+            topic_group_name,
             self.channel_name
         )
         self.send(text_data=json.dumps({
@@ -114,8 +110,21 @@ class NotificationConsumer(WebsocketConsumer):
             'created_at': created_at  
         }))
 
+    def resubscribe_to_topics(self):
+        subscriptions = UserSubscription.objects.filter(user=self.user)
+        for subscription in subscriptions:
+            topic_name = subscription.topic.name
+            topic_group_name = f"notifications_{topic_name}"
+            async_to_sync(self.channel_layer.group_add)(
+                topic_group_name,
+                self.channel_name
+            )
+            self.send(text_data=json.dumps({
+                'type': 'subscription_success',
+                'message': f'Resubscribed to {topic_name}'
+            }))
+
     def get_token_from_query(self, query_string):
-        # Parse the query string and extract the token
         query_params = parse_qs(query_string)
         return query_params.get('token', [None])[0]
 
