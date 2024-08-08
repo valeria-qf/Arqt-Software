@@ -48,7 +48,17 @@ INSTALLED_APPS = [
 # Asynchronous Server Gateway Interface,
 ASGI_APPLICATION = 'notification_system.asgi.application'
 
-# configuração  do django channels que define a camada de comunicação que será usada para gerenciar os canais e grupos de canais
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        # Outros backends de autenticação, se houver
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        # Outras permissões, se houver
+    ]
+}
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',

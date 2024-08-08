@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from core.models import Notification, NotificationTopic
-from core.serializers import NotificationSerializer
+from core.serializers import NotificationSerializer, UserSubscriptionSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from rest_framework.response import Response
@@ -10,6 +10,9 @@ from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework import generics, permissions
+from core.models import UserSubscription
+
 
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
@@ -51,3 +54,10 @@ class NotificationViewSet(viewsets.ModelViewSet):
             return Response({'status': 'notification sent'})
         except NotificationTopic.DoesNotExist:
             return Response({'status': 'topic does not exist'}, status=400)
+
+class UserSubscriptionListView(generics.ListAPIView):
+    serializer_class = UserSubscriptionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return UserSubscription.objects.filter(user=self.request.user)
