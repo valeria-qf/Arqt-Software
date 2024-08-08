@@ -103,7 +103,6 @@ class NotificationConsumer(WebsocketConsumer):
         message = event['message']
         created_at = event['created_at']
         self.send(text_data=json.dumps({
-            'type': 'notification',
             'title': title,
             'message': message,
             'created_at': created_at  

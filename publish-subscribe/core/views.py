@@ -45,7 +45,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
                     'type': 'notification_message',
                     'title': title,
                     'message': message,
-                     'created_at': notification.created_at.isoformat()
+                    'created_at': notification.created_at.isoformat()
                 }
             )
             return Response({'status': 'notification sent'})
