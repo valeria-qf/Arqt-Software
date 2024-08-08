@@ -51,11 +51,9 @@ ASGI_APPLICATION = 'notification_system.asgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        # Outros backends de autenticação, se houver
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-        # Outras permissões, se houver
     ]
 }
 

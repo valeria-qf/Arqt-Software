@@ -12,9 +12,14 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import generics, permissions
 from core.models import UserSubscription
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import AllowAny
+from rest_framework.authentication import TokenAuthentication
 
 
 class LoginView(APIView):
+    permission_classes = [AllowAny]
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -58,6 +63,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
 class UserSubscriptionListView(generics.ListAPIView):
     serializer_class = UserSubscriptionSerializer
     permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def get_queryset(self):
         return UserSubscription.objects.filter(user=self.request.user)
