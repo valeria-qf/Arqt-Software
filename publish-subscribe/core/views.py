@@ -2,7 +2,7 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from core.models import Notification, NotificationTopic
-from core.serializers import NotificationSerializer, UserSubscriptionSerializer
+from core.serializers import NotificationSerializer, TopicNotificationSerializer, UserSubscriptionSerializer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from rest_framework.response import Response
@@ -67,3 +67,8 @@ class UserSubscriptionListView(generics.ListAPIView):
 
     def get_queryset(self):
         return UserSubscription.objects.filter(user=self.request.user)
+    
+class TopicListView(viewsets.ReadOnlyModelViewSet):
+    queryset = NotificationTopic.objects.all()
+    serializer_class = TopicNotificationSerializer
+    permission_classes = [AllowAny] 
